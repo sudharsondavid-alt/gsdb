@@ -178,6 +178,31 @@
       border-radius: 6px;
     }
     .nav-btn:hover, .nav-btn.active { background: rgba(0,151,215,.18); border-color: rgba(0,151,215,.4); color: #fff; }
+    .nav-group {
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 8px;
+      margin: 8px 0;
+      padding: 8px;
+      background: rgba(255,255,255,.03);
+    }
+    .nav-group-label {
+      color: #b7d5e5;
+      font-size: 12px;
+      font-weight: 800;
+      margin: 0 2px 7px;
+    }
+    .nav-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+    }
+    .nav-wrap .nav-btn {
+      min-height: 34px;
+      padding: 7px 8px;
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.2;
+    }
     .main {
       display: flex;
       flex-direction: column;
@@ -759,19 +784,23 @@
     }
 
     function appShell(content) {
-      const nav = [
+      const primaryNav = [
         ["dashboard", "Management Console"],
         ["editorHome", "Device Editor"],
         ["catalog", "Catalog Definitions"],
         ["recordEditor", "Record Editor"],
         ["combinations", "Combinations"],
         ["masters", "Reusable Data"],
+        ["validation", "Validation"]
+      ];
+      const governanceNav = [
         ["governance", "Governance"],
         ["integrations", "API & Consumers"],
         ["sync", "Sync Management"],
         ["extraction", "LLM Extraction"],
-        ["validation", "Validation"],
-        ["reports", "Scorecards"],
+        ["reports", "Scorecards"]
+      ];
+      const utilityNav = [
         ["operations", "Admin & Handover"],
         ["importExport", "Import / Export"]
       ];
@@ -780,7 +809,15 @@
           <aside class="sidebar">
             ${daikinLogo()}
             <div class="nav-title">GSDB Modernized</div>
-            ${nav.map(([route, label]) => `<button class="nav-btn ${state.route === route ? "active" : ""}" onclick="setRoute('${route}')">${label}</button>`).join("")}
+            ${primaryNav.map(([route, label]) => `<button class="nav-btn ${state.route === route ? "active" : ""}" onclick="setRoute('${route}')">${label}</button>`).join("")}
+            <div class="nav-group">
+              <div class="nav-group-label">RFQ coverage</div>
+              <div class="nav-wrap">${governanceNav.map(([route, label]) => `<button class="nav-btn ${state.route === route ? "active" : ""}" onclick="setRoute('${route}')">${label}</button>`).join("")}</div>
+            </div>
+            <div class="nav-group">
+              <div class="nav-group-label">Tools</div>
+              <div class="nav-wrap">${utilityNav.map(([route, label]) => `<button class="nav-btn ${state.route === route ? "active" : ""}" onclick="setRoute('${route}')">${label}</button>`).join("")}</div>
+            </div>
             <div class="nav-title">Product Lines</div>
             ${catalogGroups.map(g => `<button class="nav-btn ${state.productGroup === g.id ? "active" : ""}" onclick="setRoute('editorHome',{productGroup:'${g.id}',deviceType:'${g.modules[0]}'})">${g.name}</button>`).join("")}
           </aside>
