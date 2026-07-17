@@ -536,6 +536,185 @@
     .flow-step b { display: block; color: var(--daikin-dark); margin-bottom: 6px; }
     .flow-step span { color: var(--muted); line-height: 1.4; }
 
+    .extract-stage {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+    .drop-zone {
+      border: 2px dashed rgba(0,151,215,.45);
+      background:
+        linear-gradient(135deg, rgba(0,151,215,.08), rgba(120,204,236,.12)),
+        #fff;
+      border-radius: var(--radius);
+      padding: 24px;
+      min-height: 250px;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .drop-zone:before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(0,151,215,.12);
+      animation: pulse 3s ease-in-out infinite;
+    }
+    .drop-zone > * { position: relative; z-index: 1; }
+    .upload-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: var(--daikin);
+      color: #fff;
+      font-size: 30px;
+      font-weight: 900;
+      box-shadow: 0 18px 36px rgba(0,151,215,.25);
+      animation: float 3s ease-in-out infinite;
+    }
+    .drop-zone h2 { margin: 16px 0 6px; color: var(--daikin-dark); }
+    .drop-zone p { max-width: 420px; color: var(--muted); margin: 0 0 16px; line-height: 1.45; }
+    .source-pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+    .source-pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .extract-pipeline {
+      display: grid;
+      gap: 10px;
+    }
+    .pipeline-step {
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .pipeline-step:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-105%);
+      background: linear-gradient(90deg, transparent, rgba(0,151,215,.13), transparent);
+      animation: scan 4s ease-in-out infinite;
+      animation-delay: var(--delay);
+    }
+    .pipeline-step > * { position: relative; z-index: 1; }
+    .step-dot {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--soft);
+      color: var(--daikin-dark);
+      font-weight: 900;
+    }
+    .pipeline-step strong { display: block; margin-bottom: 2px; color: var(--ink); }
+    .pipeline-step span { color: var(--muted); font-size: 13px; }
+    .confidence {
+      width: 72px;
+      height: 8px;
+      border-radius: 999px;
+      background: #e8edf1;
+      overflow: hidden;
+    }
+    .confidence i {
+      display: block;
+      height: 100%;
+      width: var(--score);
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--daikin), #24b36b);
+      animation: fillbar 1.8s ease-out both;
+    }
+    .extracted-form {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .filled-field {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 12px;
+      min-height: 76px;
+      animation: rise .55s ease-out both;
+      animation-delay: var(--delay);
+    }
+    .filled-field label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .filled-field b { color: var(--daikin-dark); }
+    .field-status {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 11px;
+      color: #0d7d4f;
+      font-weight: 800;
+    }
+    .field-status.warn { color: #a15b00; }
+    .review-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .review-stat {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 14px;
+    }
+    .review-stat b { display: block; color: var(--daikin); font-size: 24px; }
+    .review-stat span { color: var(--muted); font-size: 12px; }
+    @keyframes pulse {
+      0%, 100% { transform: scale(.92); opacity: .45; }
+      50% { transform: scale(1.12); opacity: .18; }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes scan {
+      0%, 30% { transform: translateX(-105%); }
+      65%, 100% { transform: translateX(105%); }
+    }
+    @keyframes fillbar {
+      from { width: 0; }
+      to { width: var(--score); }
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -622,7 +801,7 @@
     @media (max-width: 1100px) {
       .shell { grid-template-columns: 1fr; }
       .sidebar { position: relative; height: auto; }
-      .grid.two, .grid.three, .grid.four, .metrics, .tiles, .flow, .form-grid, .login { grid-template-columns: 1fr; }
+      .grid.two, .grid.three, .grid.four, .metrics, .tiles, .flow, .form-grid, .login, .extract-stage, .extracted-form, .review-strip { grid-template-columns: 1fr; }
       .split { grid-template-columns: 1fr; }
       .login-visual { padding: 24px; }
       .login-card { padding: 36px 24px; }
@@ -1232,21 +1411,67 @@
       return appShell(h`
         <div class="hero">
           <h1>LLM-Assisted Extraction</h1>
-          <p>PDF and CSV product sources can prefill fields, capacity tables, images, and benefits. Nothing is approved automatically; human validation is required before release.</p>
+          <p>Upload a PDF, CSV, image pack, or spec sheet. The assistant extracts structured product data, maps it to reusable GSDB fields, fills a draft record, and sends uncertain values to human review before approval.</p>
         </div>
-        <div class="grid two">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Add product from source document</h2>
+            <div class="toolbar">
+              <button onclick="toast('Upload dialog opened')">Add source</button>
+              <button class="secondary" onclick="toast('Extraction simulation started')">Run extraction</button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="extract-stage">
+              <div class="drop-zone" onclick="toast('Drop zone ready for PDF, CSV, XLSX, JPG, or PNG')">
+                <div class="upload-icon">+</div>
+                <h2>Upload or drag source files</h2>
+                <p>Spec sheets, performance tables, product images, benefit lists, and CSV capacity data are converted into a structured draft.</p>
+                <div class="source-pill-row">
+                  <span class="source-pill">PDF spec sheet</span>
+                  <span class="source-pill">CSV capacity table</span>
+                  <span class="source-pill">XLSX data map</span>
+                  <span class="source-pill">Product images</span>
+                </div>
+              </div>
+              <div class="extract-pipeline">
+                <div class="pipeline-step" style="--delay:0s"><div class="step-dot">1</div><div><strong>Ingest</strong><span>Source package received and classified by product line.</span></div><div class="confidence" style="--score:100%"><i></i></div></div>
+                <div class="pipeline-step" style="--delay:.45s"><div class="step-dot">2</div><div><strong>Extract</strong><span>Tables, dimensions, refrigerant data, labels, and images detected.</span></div><div class="confidence" style="--score:92%"><i></i></div></div>
+                <div class="pipeline-step" style="--delay:.9s"><div class="step-dot">3</div><div><strong>Map</strong><span>Fields matched to canonical GSDB schema and reusable masters.</span></div><div class="confidence" style="--score:88%"><i></i></div></div>
+                <div class="pipeline-step" style="--delay:1.35s"><div class="step-dot">4</div><div><strong>Fill draft</strong><span>Draft product form is populated with confidence markers.</span></div><div class="confidence" style="--score:84%"><i></i></div></div>
+                <div class="pipeline-step" style="--delay:1.8s"><div class="step-dot">5</div><div><strong>Human gate</strong><span>Reviewer accepts, corrects, or rejects suggested values.</span></div><div class="confidence" style="--score:76%"><i></i></div></div>
+              </div>
+            </div>
+            <div class="review-strip">
+              <div class="review-stat"><b>24</b><span>fields detected</span></div>
+              <div class="review-stat"><b>18</b><span>auto-filled with high confidence</span></div>
+              <div class="review-stat"><b>3</b><span>need reviewer decision</span></div>
+              <div class="review-stat"><b>6</b><span>reusable masters linked</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="grid two" style="margin-top:18px">
           <div class="panel">
-            <div class="panel-head"><h2>Extraction queue</h2><button onclick="toast('PDF/CSV upload opened')">Upload source</button></div>
-            <table><thead><tr><th>Source type</th><th>Candidate</th><th>Extraction result</th><th>Status</th></tr></thead><tbody>
-              ${extractionRows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td><span class="status warn">${r[3]}</span></td></tr>`).join("")}
-            </tbody></table>
+            <div class="panel-head"><h2>Filled draft preview</h2><button onclick="toast('Draft opened in Record Editor')">Open draft</button></div>
+            <div class="panel-body">
+              <div class="extracted-form">
+                <div class="filled-field" style="--delay:0s"><label>Material name</label><b>UPRA036DAVJ</b><span class="field-status">96% matched</span></div>
+                <div class="filled-field" style="--delay:.08s"><label>Product name</label><b>Reversible air-to-water heat pump</b><span class="field-status">91% matched</span></div>
+                <div class="filled-field" style="--delay:.16s"><label>Product family</label><b>Altherma Outdoor</b><span class="field-status">Reusable family linked</span></div>
+                <div class="filled-field" style="--delay:.24s"><label>Refrigerant</label><b>R32</b><span class="field-status">Master linked</span></div>
+                <div class="filled-field" style="--delay:.32s"><label>Dimensions</label><b>1270 x 1003 x 534 mm</b><span class="field-status">94% matched</span></div>
+                <div class="filled-field" style="--delay:.4s"><label>Base charge</label><b>4.21 kg</b><span class="field-status warn">Needs review</span></div>
+                <div class="filled-field" style="--delay:.48s"><label>Power supply</label><b>VJ</b><span class="field-status">Master linked</span></div>
+                <div class="filled-field" style="--delay:.56s"><label>Capacity table</label><b>Cooling/heating parsed</b><span class="field-status warn">2 cells flagged</span></div>
+                <div class="filled-field" style="--delay:.64s"><label>Images</label><b>3 product assets found</b><span class="field-status">Ready to attach</span></div>
+              </div>
+            </div>
           </div>
           <div class="panel">
-            <div class="panel-head"><h2>Human validation gate</h2><button class="secondary" onclick="toast('Reviewed fields applied to draft product')">Apply reviewed fields</button></div>
-            <div class="panel-body">
-              <div class="reuse-card"><div class="reuse-icon">18</div><div><h3>Prefilled fields</h3><p>Material, product name, refrigerant, dimensions, sound data, power supply, and regional values.</p></div><span class="status warn">Review</span></div>
-              <div class="reuse-card"><div class="reuse-icon">3</div><div><h3>Low-confidence values</h3><p>Highlighted inline so reviewers fix them before approval.</p></div><span class="status warn">Needs input</span></div>
-            </div>
+            <div class="panel-head"><h2>Review queue</h2><button class="secondary" onclick="toast('Reviewed fields applied to product draft')">Apply reviewed fields</button></div>
+            <table><thead><tr><th>Source</th><th>Candidate</th><th>Result</th><th>Action</th></tr></thead><tbody>
+              ${extractionRows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td><button class="secondary" onclick="toast('Reviewer decision captured for ${r[1]}')">${r[3]}</button></td></tr>`).join("")}
+            </tbody></table>
           </div>
         </div>
       `);
