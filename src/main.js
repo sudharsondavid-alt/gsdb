@@ -147,7 +147,6 @@ const state = {
         ["catalog", "Catalog Definitions"],
         ["recordEditor", "Record Editor"],
         ["combinations", "Combinations"],
-        ["masters", "Reusable Data"],
         ["validation", "Validation"]
       ];
       const platformNav = [
@@ -193,7 +192,6 @@ const state = {
         catalog: "Catalog Definitions",
         recordEditor: "Record Editor",
         combinations: "Combinations",
-        masters: "Reusable Data",
         integrations: "API & Consumers",
         sync: "Sync Management",
         extraction: "LLM Extraction",
@@ -276,7 +274,7 @@ const state = {
         <div class="panel" style="margin-top:18px">
           <div class="panel-head"><h2>Modernization coverage</h2><button class="secondary" onclick="setRoute('reports')">Open scorecards</button></div>
           <div class="panel-body">
-            ${coverageItems.map((c, i) => `<div class="reuse-card" onclick="setRoute('${["editorHome","recordEditor","masters","integrations","reports","validation"][i]}')"><div class="reuse-icon">${i + 1}</div><div><h3>${c[0]}</h3><p>${c[1]}</p></div><span class="status ok">Covered</span></div>`).join("")}
+            ${coverageItems.map((c, i) => `<div class="reuse-card" onclick="setRoute('${["editorHome","recordEditor","recordEditor","integrations","reports","validation"][i]}')"><div class="reuse-icon">${i + 1}</div><div><h3>${c[0]}</h3><p>${c[1]}</p></div><span class="status ok">Covered</span></div>`).join("")}
           </div>
         </div>
       `);
@@ -397,7 +395,7 @@ const state = {
           </section>
         </div>
         <div class="panel" style="margin-top:16px">
-          <div class="panel-head"><h3>Reusable field lineage</h3><button class="secondary" onclick="setRoute('masters')">Open master data</button></div>
+          <div class="panel-head"><h3>Reusable field lineage</h3><button class="secondary" onclick="toast('Lineage details shown in this record')">Show lineage</button></div>
           <div class="panel-body grid three">
             ${masterData.slice(0,3).map(m => `<div class="reuse-card"><div class="reuse-icon">↻</div><div><h3>${m.name}</h3><p>${m.value}</p></div><span class="status ok">${m.used} uses</span></div>`).join("")}
           </div>
