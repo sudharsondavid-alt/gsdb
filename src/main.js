@@ -161,13 +161,13 @@ const state = {
           <aside class="sidebar">
             ${daikinLogo()}
             <div class="nav-title">GSDB Modernized</div>
-            ${primaryNav.map(([route, label]) => `<button class="nav-btn ${state.route === route ? "active" : ""}" onclick="setRoute('${route}')">${label}</button>`).join("")}
+            ${primaryNav.map(([route, label]) => `<button class="nav-btn ${state.route === route ? "active" : ""}" data-route="${route}" onclick="setRoute('${route}')">${label}</button>`).join("")}
             <div class="nav-group">
               <div class="nav-group-label">Platform controls</div>
-              <div class="nav-wrap">${platformNav.map(([route, label]) => `<button class="nav-btn ${state.route === route ? "active" : ""}" onclick="setRoute('${route}')">${label}</button>`).join("")}</div>
+              <div class="nav-wrap">${platformNav.map(([route, label]) => `<button class="nav-btn ${state.route === route ? "active" : ""}" data-route="${route}" onclick="setRoute('${route}')">${label}</button>`).join("")}</div>
             </div>
             <div class="nav-title">Product Lines</div>
-            ${catalogGroups.map(g => `<button class="nav-btn ${state.productGroup === g.id ? "active" : ""}" onclick="setRoute('editorHome',{productGroup:'${g.id}',deviceType:'${g.modules[0]}'})">${g.name}</button>`).join("")}
+            ${catalogGroups.map(g => `<button class="nav-btn ${state.productGroup === g.id ? "active" : ""}" data-product-group="${g.id}" onclick="setRoute('editorHome',{productGroup:'${g.id}',deviceType:'${g.modules[0]}'})">${g.name}</button>`).join("")}
           </aside>
           <main class="main">
             <div class="topbar">
@@ -728,5 +728,13 @@ const state = {
       document.getElementById("app").innerHTML = (routes[state.route] || dashboardPage)();
     }
 
+    Object.assign(window, {
+      state,
+      setRoute,
+      toast,
+      render,
+      openEditor,
+      closeEditor
+    });
+
     render();
-  
