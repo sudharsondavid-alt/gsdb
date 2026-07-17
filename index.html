@@ -623,7 +623,8 @@
       { id: "vrv", name: "VRV", modules: ["Indoor Units", "Outdoor Units", "Ventilation and Special", "BS / SV / BP", "Controllers", "Options, Refnets, DGT", "Gas Furnaces", "DOAS", "Future Indoor Groups", "Mega Q"] },
       { id: "split", name: "Split and Sky Air", modules: ["Outdoor Units", "Indoor Units", "BP Units", "Water Tanks", "Options", "Product Information"] },
       { id: "unitary", name: "Unitary and LC Split", modules: ["Outdoor Units", "Coils", "AHU", "Gas Furnaces", "Blowers", "Options"] },
-      { id: "altherma", name: "Altherma", modules: ["Outdoor Units", "Hydroboxes", "Emitters", "Water Tanks", "Options"] }
+      { id: "altherma", name: "Altherma", modules: ["Outdoor Units", "Hydroboxes", "Emitters", "Water Tanks", "Options"] },
+      { id: "future", name: "PTAC / ResPack / Future", modules: ["PTAC", "ResPack", "Rooftop", "Ductless / Mini-Split", "Planned Families"] }
     ];
 
     const products = [
@@ -641,7 +642,9 @@
       { id: 97, group: "unitary", type: "Gas Furnaces", family: "Gas furnace DM97MC", material: "DM97MC0804CN", product: "DM97MC0804CNA", refrigerant: "-", ci: 0, placement: "Upflow/Horizontal", power: "GF: 1x115, 60Hz", weight: "64.41kg", dimensions: "533.4x876.3x733.42mm", status: "Ready", reused: 12 },
       { id: 36, group: "altherma", type: "Outdoor Units", family: "Heat pump", material: "UPRA036DAVJ", product: "reversible air to water heat pump", refrigerant: "R32", ci: 0, placement: "Outdoor", power: "VJ", weight: "146kg", dimensions: "1270x1003x534mm", status: "Ready", reused: 6 },
       { id: 50, group: "altherma", type: "Water Tanks", family: "Low / Daikin", material: "EKHWS050BA3VJU", product: "EKHWS050BA3VJU", refrigerant: "-", ci: 0, placement: "Water tank", power: "208-230V, 60Hz", weight: "45.0kg", dimensions: "1150x580x580mm", status: "Ready", reused: 10 },
-      { id: 36, group: "altherma", type: "Hydroboxes", family: "Daikin", material: "EDLQ036BA", product: "Hydrobox", refrigerant: "-", ci: 0, placement: "Hydrobox", power: "208-230V, 60Hz", weight: "180kg", dimensions: "1418x1435x382mm", status: "Ready", reused: 15 }
+      { id: 36, group: "altherma", type: "Hydroboxes", family: "Daikin", material: "EDLQ036BA", product: "Hydrobox", refrigerant: "-", ci: 0, placement: "Hydrobox", power: "208-230V, 60Hz", weight: "180kg", dimensions: "1418x1435x382mm", status: "Ready", reused: 15 },
+      { id: 801, group: "future", type: "PTAC", family: "PTAC heat pump", material: "PTAC-P024", product: "Packaged terminal air conditioner", refrigerant: "R32", ci: 24, placement: "Through-wall", power: "VJ: 1x208-230V, 60Hz", weight: "54kg", dimensions: "1067x406x533mm", status: "Discovery", reused: 4 },
+      { id: 802, group: "future", type: "ResPack", family: "Residential packaged", material: "RSPK036", product: "Residential packaged heat pump", refrigerant: "R32", ci: 36, placement: "Outdoor", power: "TJ: 3x230V, 60Hz", weight: "182kg", dimensions: "940x940x990mm", status: "Discovery", reused: 6 }
     ];
 
     const masterData = [
@@ -658,6 +661,43 @@
       { stage: "Change package", owner: "Product data team", status: "126 records grouped for review", updated: "Today 10:03 AM", badge: "warn" },
       { stage: "Validation gate", owner: "Release authority", status: "5 open checks before publish", updated: "Today 10:22 AM", badge: "warn" },
       { stage: "Published snapshot", owner: "Applications", status: "Read-only runtime export", updated: "Yesterday 6:40 PM", badge: "ok" }
+    ];
+
+    const consumers = [
+      { name: "WebXpress", use: "VRV selection", coverage: "Clean field map plus reconciliation queue", status: "Mapped" },
+      { name: "MatchupXpress", use: "Equipment matchup", coverage: "Master field usage tracked", status: "Mapped" },
+      { name: "LCXpress", use: "Light commercial selection", coverage: "Field categories tracked", status: "Mapped" },
+      { name: "EA-Pro", use: "Energy analysis", coverage: "API contract candidate", status: "Discovery" },
+      { name: "BIM / 3D / Revit", use: "Model and plugin consumers", coverage: "Governed API endpoint", status: "Discovery" },
+      { name: "Third-party tools", use: "Approved integration partners", coverage: "Documented API contract", status: "Governed" }
+    ];
+
+    const coverageItems = [
+      ["Product families", "VRV, Unitary / Light Commercial, Ductless / Mini-Split, PTAC, ResPack, Altherma, Mega Q, planned families"],
+      ["Guided entry", "Product-line-aware steps, irrelevant field suppression, inline guidance, copy-product review"],
+      ["Functional parity", "Graphics/image management, top/CAD/floor plan views, capacity tables, charge calculations, mix schemes, connection ratio logic"],
+      ["Rules management", "Compatibility, required accessory, configuration dependency, refrigerant, validation, completeness, and regional rules"],
+      ["Regions", "Daikin Japan, Europe, North America, Latin America with one canonical baseline and regional associations"],
+      ["Operations", "Authentication, permissions, configuration, audit logging, reporting, runbooks, and training handover"]
+    ];
+
+    const governanceSteps = [
+      ["Data administrator", "Create or update product data, source mappings, rules, and reusable masters"],
+      ["Engineering reviewer", "Validate technical values, capacity tables, refrigerant logic, and compatibility rules"],
+      ["Product manager", "View and approve only; cannot deploy data directly"],
+      ["Release authority", "Publishes validated snapshots from the canonical database version"]
+    ];
+
+    const syncRows = [
+      ["AHRI", "Unitary / Split", "42 inbound changes", "12 conflicts", "Preview required"],
+      ["PIM", "Product information", "118 product attributes", "8 conflicts", "Selective sync"],
+      ["MDM", "All product lines", "41,801 candidate records", "466 reconciliation items", "Human review"]
+    ];
+
+    const extractionRows = [
+      ["PDF spec sheet", "UPRA036DAVJ", "18 fields prefilled", "Needs engineering review"],
+      ["CSV capacity table", "2MX18AXVJU", "Cooling / heating table parsed", "Ready for validation"],
+      ["Product image batch", "BRC1E73 resized", "Picture and benefit mappings found", "Needs steward review"]
     ];
 
     const validationRows = [
@@ -726,7 +766,13 @@
         ["recordEditor", "Record Editor"],
         ["combinations", "Combinations"],
         ["masters", "Reusable Data"],
+        ["governance", "Governance"],
+        ["integrations", "API & Consumers"],
+        ["sync", "Sync Management"],
+        ["extraction", "LLM Extraction"],
         ["validation", "Validation"],
+        ["reports", "Scorecards"],
+        ["operations", "Admin & Handover"],
         ["importExport", "Import / Export"]
       ];
       return h`
@@ -763,7 +809,13 @@
         recordEditor: "Record Editor",
         combinations: "Combinations",
         masters: "Reusable Data",
+        governance: "Governance",
+        integrations: "API & Consumers",
+        sync: "Sync Management",
+        extraction: "LLM Extraction",
         validation: "Validation",
+        reports: "Scorecards",
+        operations: "Admin & Handover",
         importExport: "Import / Export"
       }[state.route] || "GSDB";
     }
@@ -835,6 +887,12 @@
             <div class="panel-body">
               ${validationRows.map(r => `<div class="reuse-card"><div class="reuse-icon">${r[1] === "OK" ? "OK" : "!"}</div><div><h3>${r[0]}</h3><p>${r[2]}</p></div><span class="status ${r[1] === "OK" ? "ok" : "warn"}">${r[1]}</span></div>`).join("")}
             </div>
+          </div>
+        </div>
+        <div class="panel" style="margin-top:18px">
+          <div class="panel-head"><h2>RFQ component coverage</h2><button class="secondary" onclick="setRoute('reports')">Open scorecards</button></div>
+          <div class="panel-body">
+            ${coverageItems.map((c, i) => `<div class="reuse-card" onclick="setRoute('${["editorHome","recordEditor","masters","integrations","governance","operations"][i]}')"><div class="reuse-icon">${i + 1}</div><div><h3>${c[0]}</h3><p>${c[1]}</p></div><span class="status ok">Covered</span></div>`).join("")}
           </div>
         </div>
       `);
@@ -1066,6 +1124,97 @@
       `);
     }
 
+    function governancePage() {
+      return appShell(h`
+        <div class="hero">
+          <h1>Governance & Approval Flow</h1>
+          <p>Data changes move through guided review, product manager sign-off, validation, and release authority approval. Product managers can approve but cannot deploy data directly.</p>
+        </div>
+        <div class="grid two">
+          <div class="panel">
+            <div class="panel-head"><h2>Roles and permissions</h2><button onclick="toast('Role matrix opened')">Manage roles</button></div>
+            <table><thead><tr><th>Role</th><th>Responsibility</th><th>Deploy?</th></tr></thead><tbody>
+              ${governanceSteps.map((r, i) => `<tr><td>${r[0]}</td><td>${r[1]}</td><td><span class="status ${i === 3 ? "ok" : "warn"}">${i === 3 ? "Yes" : "No"}</span></td></tr>`).join("")}
+            </tbody></table>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h2>Change package P024-126</h2><button class="secondary" onclick="toast('Approval request routed to product manager')">Route approval</button></div>
+            <div class="panel-body">
+              <div class="flow">
+                <div class="flow-step"><b>Enter</b><span>Administrator updates data or rules.</span></div>
+                <div class="flow-step"><b>Review</b><span>Engineering validates technical content.</span></div>
+                <div class="flow-step"><b>Approve</b><span>Product manager signs off.</span></div>
+                <div class="flow-step"><b>Publish</b><span>Release authority creates snapshot.</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `);
+    }
+
+    function integrationsPage() {
+      return appShell(h`
+        <div class="hero">
+          <h1>API & Downstream Consumers</h1>
+          <p>The API layer preserves existing pipeline behavior while exposing governed, documented access for selection tools, energy analysis, BIM/Revit, and approved partners.</p>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Consumer contracts</h2><button onclick="toast('API contract draft exported')">Export contract</button></div>
+          <table><thead><tr><th>Consumer</th><th>Use case</th><th>Coverage</th><th>Status</th></tr></thead><tbody>
+            ${consumers.map(c => `<tr><td>${c.name}</td><td>${c.use}</td><td>${c.coverage}</td><td><span class="status ${c.status === "Mapped" || c.status === "Governed" ? "ok" : "warn"}">${c.status}</span></td></tr>`).join("")}
+          </tbody></table>
+        </div>
+        <div class="grid two" style="margin-top:18px">
+          <div class="panel"><div class="panel-head"><h2>Field usage map</h2></div><div class="panel-body">
+            <div class="metric"><b>6,611</b><span>mapped GSDB fields</span></div>
+            <div class="metric" style="margin-top:12px"><b>466</b><span>WebXpress rows need reconciliation</span></div>
+          </div></div>
+          <div class="panel"><div class="panel-head"><h2>Compatibility guardrails</h2></div><div class="panel-body">
+            <div class="reuse-card"><div class="reuse-icon">API</div><div><h3>Backward compatibility validation</h3><p>Contract checks compare current GSDB values, generated fields, and downstream expectations before snapshot publication.</p></div><span class="status ok">Active</span></div>
+          </div></div>
+        </div>
+      `);
+    }
+
+    function syncPage() {
+      return appShell(h`
+        <div class="hero">
+          <h1>Sync Layer Management</h1>
+          <p>Inbound AHRI, PIM, and MDM records are previewed before commit. Teams can run selective sync by product line and accept or reject conflicts with audit history.</p>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Inbound sync preview</h2><div class="toolbar"><button onclick="toast('VRV-only sync preview started')">Preview selective sync</button><button class="secondary" onclick="toast('Decision history exported')">Audit history</button></div></div>
+          <table><thead><tr><th>Source</th><th>Scope</th><th>Pending records</th><th>Conflicts</th><th>Decision</th></tr></thead><tbody>
+            ${syncRows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td><button class="secondary" onclick="toast('Conflict decision captured for ${r[0]}')">${r[4]}</button></td></tr>`).join("")}
+          </tbody></table>
+        </div>
+      `);
+    }
+
+    function extractionPage() {
+      return appShell(h`
+        <div class="hero">
+          <h1>LLM-Assisted Extraction</h1>
+          <p>PDF and CSV product sources can prefill fields, capacity tables, images, and benefits. Nothing is approved automatically; human validation is required before release.</p>
+        </div>
+        <div class="grid two">
+          <div class="panel">
+            <div class="panel-head"><h2>Extraction queue</h2><button onclick="toast('PDF/CSV upload opened')">Upload source</button></div>
+            <table><thead><tr><th>Source type</th><th>Candidate</th><th>Extraction result</th><th>Status</th></tr></thead><tbody>
+              ${extractionRows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td><span class="status warn">${r[3]}</span></td></tr>`).join("")}
+            </tbody></table>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h2>Human validation gate</h2><button class="secondary" onclick="toast('Reviewed fields applied to draft product')">Apply reviewed fields</button></div>
+            <div class="panel-body">
+              <div class="reuse-card"><div class="reuse-icon">18</div><div><h3>Prefilled fields</h3><p>Material, product name, refrigerant, dimensions, sound data, power supply, and regional values.</p></div><span class="status warn">Review</span></div>
+              <div class="reuse-card"><div class="reuse-icon">3</div><div><h3>Low-confidence values</h3><p>Highlighted inline so reviewers fix them before approval.</p></div><span class="status warn">Needs input</span></div>
+            </div>
+          </div>
+        </div>
+      `);
+    }
+
     function validationPage() {
       return appShell(h`
         <div class="hero">
@@ -1077,6 +1226,54 @@
           <table><thead><tr><th>Record</th><th>Result</th><th>Issue / reuse note</th><th>Connected page</th></tr></thead><tbody>
             ${validationRows.map(r => `<tr><td>${r[0]}</td><td><span class="status ${r[1] === "OK" ? "ok" : "warn"}">${r[1]}</span></td><td>${r[2]}</td><td><button class="secondary" onclick="setRoute('recordEditor',{selectedProduct:'${r[3]}'})">Open</button></td></tr>`).join("")}
           </tbody></table>
+        </div>
+      `);
+    }
+
+    function reportsPage() {
+      return appShell(h`
+        <div class="hero">
+          <h1>Reporting & Data-Quality Scorecards</h1>
+          <p>Operational reporting gives governance teams visibility into release status, completeness, coverage by product line and region, error rates, rework cycles, approvals, and sync conflicts.</p>
+        </div>
+        <div class="metrics">
+          <div class="metric"><b>92%</b><span>product completeness</span></div>
+          <div class="metric"><b>5</b><span>blocked release checks</span></div>
+          <div class="metric"><b>12</b><span>open sync conflicts</span></div>
+          <div class="metric"><b>18%</b><span>rework cycle reduction target</span></div>
+        </div>
+        <div class="grid two">
+          <div class="panel"><div class="panel-head"><h2>Coverage by product family</h2></div><table><tr><th>Family</th><th>Coverage</th><th>Readiness</th></tr><tr><td>VRV</td><td>96%</td><td><span class="status ok">Ready</span></td></tr><tr><td>Unitary / LC</td><td>88%</td><td><span class="status warn">Review</span></td></tr><tr><td>PTAC / ResPack</td><td>41%</td><td><span class="status warn">Discovery</span></td></tr><tr><td>Altherma</td><td>84%</td><td><span class="status ok">Ready</span></td></tr></table></div>
+          <div class="panel"><div class="panel-head"><h2>Governance scorecard</h2></div><table><tr><th>Measure</th><th>Current</th><th>Target</th></tr><tr><td>Pending approvals</td><td>23</td><td>Less than 10</td></tr><tr><td>Release-ready products</td><td>328</td><td>350</td></tr><tr><td>Field reconciliation queue</td><td>466</td><td>0 before cutover</td></tr><tr><td>Extractor review quality</td><td>91%</td><td>95%</td></tr></table></div>
+        </div>
+      `);
+    }
+
+    function operationsPage() {
+      return appShell(h`
+        <div class="hero">
+          <h1>Admin, Configuration & Handover</h1>
+          <p>The system is designed for Daikin ownership: source code, schema, configuration, API contracts, deployment runbooks, admin guides, training, and bounded hypercare without proprietary lock-in.</p>
+        </div>
+        <div class="grid two">
+          <div class="panel">
+            <div class="panel-head"><h2>Platform controls</h2><button onclick="toast('Configuration change logged')">Edit config</button></div>
+            <div class="panel-body">
+              <div class="reuse-card"><div class="reuse-icon">ID</div><div><h3>Authentication</h3><p>Role-based access by product line and function.</p></div><span class="status ok">Covered</span></div>
+              <div class="reuse-card"><div class="reuse-icon">CFG</div><div><h3>Configuration</h3><p>Regions, feature flags, release gates, and environment snapshots.</p></div><span class="status ok">Covered</span></div>
+              <div class="reuse-card"><div class="reuse-icon">LOG</div><div><h3>Audit logging</h3><p>Tracks creates, updates, approvals, sync decisions, and published snapshots.</p></div><span class="status ok">Covered</span></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h2>In-house readiness</h2><button class="secondary" onclick="toast('Runbook checklist exported')">Export runbook</button></div>
+            <table><thead><tr><th>Deliverable</th><th>Status</th></tr></thead><tbody>
+              <tr><td>Architecture and data model documentation</td><td><span class="status ok">Included</span></td></tr>
+              <tr><td>API contracts and integration examples</td><td><span class="status ok">Included</span></td></tr>
+              <tr><td>Deployment and support runbooks</td><td><span class="status ok">Included</span></td></tr>
+              <tr><td>Admin, engineering, and product training</td><td><span class="status warn">Planned</span></td></tr>
+              <tr><td>Bounded hypercare and clean exit</td><td><span class="status warn">Planned</span></td></tr>
+            </tbody></table>
+          </div>
         </div>
       `);
     }
@@ -1126,8 +1323,14 @@
         catalog: catalogPage,
         recordEditor: recordEditorPage,
         masters: mastersPage,
+        governance: governancePage,
+        integrations: integrationsPage,
+        sync: syncPage,
+        extraction: extractionPage,
         combinations: combinationsPage,
         validation: validationPage,
+        reports: reportsPage,
+        operations: operationsPage,
         importExport: importExportPage
       };
       document.getElementById("app").innerHTML = (routes[state.route] || dashboardPage)();
