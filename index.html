@@ -615,7 +615,7 @@
       deviceType: "Indoor Units",
       selectedProduct: "FXAA05AAVJU",
       editorMode: "technical",
-      database: "WorkDb_DNA_820",
+      activeVersion: "GSDB 2.1.0 / Central_USA 13.6.2",
       signedInUser: "Rafiul Haq"
     };
 
@@ -653,12 +653,11 @@
       { name: "Indoor mix 4MXS", type: "Combination", value: "CR 50-200, VRV/RA constraints", used: 24, owner: "Combinations" }
     ];
 
-    const databases = [
-      { version: "2.0.5 (820)", kind: "Production", modified: "6/17/2026 3:31:45 PM", data: "Central_USA 13.6.2", status: "VRV-Prod: SMD updated", badge: "ok" },
-      { version: "2.0.5 (820)", kind: "Work", modified: "6/22/2026 8:51:08 AM", data: "Central_USA 13.6.2", status: "Selected working database", badge: "warn" },
-      { version: "2.0.5 (820)", kind: "QA", modified: "5/21/2026 9:04:23 AM", data: "Central_USA 13.6.2", status: "Ready for release", badge: "ok" },
-      { version: "2.0.4 (816)", kind: "Work", modified: "2/17/2026 5:12:01 AM", data: "Central_USA 13.6.2", status: "Locked", badge: "bad" },
-      { version: "1.9.9 (796)", kind: "Dev", modified: "5/26/2025 9:58:24 AM", data: "GUY_ONLY 13.5.3", status: "Archive", badge: "" }
+    const releaseStages = [
+      { stage: "Canonical version", owner: "GSDB core", status: "Single source of truth", updated: "Today 9:12 AM", badge: "ok" },
+      { stage: "Change package", owner: "Product data team", status: "126 records grouped for review", updated: "Today 10:03 AM", badge: "warn" },
+      { stage: "Validation gate", owner: "Release authority", status: "5 open checks before publish", updated: "Today 10:22 AM", badge: "warn" },
+      { stage: "Published snapshot", owner: "Applications", status: "Read-only runtime export", updated: "Yesterday 6:40 PM", badge: "ok" }
     ];
 
     const validationRows = [
@@ -742,7 +741,7 @@
           <main class="main">
             <div class="topbar">
               <div>
-                <div class="crumb"><strong>${titleForRoute()}</strong> / ${currentGroup().name} / ${state.database}</div>
+                <div class="crumb"><strong>${titleForRoute()}</strong> / ${currentGroup().name} / ${state.activeVersion}</div>
               </div>
               <div class="top-actions">
                 <span class="pill">Region DNA</span>
@@ -780,7 +779,7 @@
             <div class="field"><label>Password</label><input type="password" value="modernization"></div>
             <div class="field"><label>Region</label><select><option>DNA - Central USA</option><option>DENV</option><option>DIL</option></select></div>
             <button onclick="setRoute('dashboard')">Sign in to GSDB</button>
-            <p style="margin-top:18px">Prototype role: database manager with release authority.</p>
+            <p style="margin-top:18px">Prototype role: product data steward with release authority.</p>
           </section>
           <section class="login-visual">
             <div class="system-map">
@@ -792,7 +791,7 @@
                 <div class="map-node"><strong>Smart Editors</strong><span>Inherited fields, duplicate detection, impact preview.</span></div>
                 <div class="map-node"><strong>Combinations</strong><span>Indoor/outdoor, BS/SV/BP, AHU, options, gas furnace pairings.</span></div>
                 <div class="map-node"><strong>Validation</strong><span>Pre-release checks for missing tables and inconsistent schemes.</span></div>
-                <div class="map-node"><strong>Release Flow</strong><span>Work to QA to Production with backup and audit trail.</span></div>
+                <div class="map-node"><strong>Release Flow</strong><span>One canonical version, change packages, validation gates, and published snapshots.</span></div>
               </div>
             </div>
           </section>
@@ -804,29 +803,29 @@
       return appShell(h`
         <div class="hero">
           <h1>GSDB Management Console</h1>
-          <p>Select the working database, compare versions, and release changes with confidence. The old production, QA, work, backup, and locked rows are consolidated into a clear release board.</p>
+          <p>Operate from one canonical GSDB version. Product teams submit change packages, validation gates protect quality, and downstream tools consume controlled published snapshots without creating duplicate databases.</p>
         </div>
         <div class="metrics">
           <div class="metric"><b>41,801</b><span>MDM records waiting</span></div>
           <div class="metric"><b>15</b><span>shared master libraries</span></div>
           <div class="metric"><b>328</b><span>definitions reusing schemes</span></div>
-          <div class="metric"><b>5</b><span>validation items before release</span></div>
+          <div class="metric"><b>1</b><span>canonical database version</span></div>
         </div>
         <div class="grid two">
           <div class="panel">
             <div class="panel-head">
-              <h2>Database versions</h2>
+              <h2>Single version operating model</h2>
               <div class="toolbar">
-                <button onclick="toast('Opening selected database in the Device Editor')">Open</button>
-                <button class="secondary" onclick="toast('Backup copy queued for WorkDb_DNA_820')">Make backup</button>
-                <button class="secondary" onclick="toast('Release package prepared for QA review')">Release to QA</button>
+                <button onclick="setRoute('editorHome')">Open catalog</button>
+                <button class="secondary" onclick="toast('Change package created from current canonical version')">Create package</button>
+                <button class="secondary" onclick="toast('Published snapshot queued after validation gate')">Publish snapshot</button>
               </div>
             </div>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Version</th><th>Kind</th><th>Modified</th><th>Data version</th><th>Status</th></tr></thead>
+                <thead><tr><th>Stage</th><th>Owner</th><th>Updated</th><th>Status</th></tr></thead>
                 <tbody>
-                  ${databases.map((d, i) => `<tr class="${i === 1 ? "selected" : ""}" onclick="state.database='${d.kind === "Work" ? "WorkDb_DNA_820" : d.kind}'; toast('Selected ${d.kind} database')"><td>${d.version}</td><td>${d.kind}</td><td>${d.modified}</td><td>${d.data}</td><td><span class="status ${d.badge}">${d.status}</span></td></tr>`).join("")}
+                  ${releaseStages.map((d, i) => `<tr class="${i === 0 ? "selected" : ""}" onclick="toast('${d.stage}: ${d.status}')"><td>${d.stage}</td><td>${d.owner}</td><td>${d.updated}</td><td><span class="status ${d.badge}">${d.status}</span></td></tr>`).join("")}
                 </tbody>
               </table>
             </div>
@@ -1048,7 +1047,7 @@
                 <div class="flow-step"><b>Link</b><span>Attach to products, families, combinations, and tables.</span></div>
                 <div class="flow-step"><b>Inherit</b><span>Editors show source values and local overrides.</span></div>
                 <div class="flow-step"><b>Validate</b><span>Detect missing tables or mismatched regional rules.</span></div>
-                <div class="flow-step"><b>Release</b><span>Promote Work to QA and Production with audit history.</span></div>
+                <div class="flow-step"><b>Publish</b><span>Approve a change package and create a read-only snapshot for downstream apps.</span></div>
               </div>
               <div style="margin-top:18px" class="panel"><div class="panel-head"><h3>Records affected by VJ power supply</h3></div><table><tr><th>Product</th><th>Area</th><th>Action</th></tr><tr><td>FXAA05AAVJU</td><td>Indoor Units</td><td>Update inherited value</td></tr><tr><td>BSA36AAVJ</td><td>BS Boxes</td><td>Update inherited value</td></tr><tr><td>VAM300GVJU</td><td>Ventilation</td><td>Flag for review</td></tr></table></div>
             </div>
