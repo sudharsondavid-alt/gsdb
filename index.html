@@ -872,8 +872,8 @@
       { name: "MatchupXpress", use: "Equipment matchup", coverage: "Master field usage tracked", status: "Mapped" },
       { name: "LCXpress", use: "Light commercial selection", coverage: "Field categories tracked", status: "Mapped" },
       { name: "EA-Pro", use: "Energy analysis", coverage: "API contract candidate", status: "Discovery" },
-      { name: "BIM / 3D / Revit", use: "Model and plugin consumers", coverage: "Governed API endpoint", status: "Discovery" },
-      { name: "Third-party tools", use: "Approved integration partners", coverage: "Documented API contract", status: "Governed" }
+      { name: "BIM / 3D / Revit", use: "Model and plugin consumers", coverage: "Documented API endpoint", status: "Discovery" },
+      { name: "Third-party tools", use: "Approved integration partners", coverage: "Documented API contract", status: "Mapped" }
     ];
 
     const coverageItems = [
@@ -883,13 +883,6 @@
       ["Rules management", "Compatibility, required accessory, configuration dependency, refrigerant, validation, completeness, and regional rules"],
       ["Regions", "Daikin Japan, Europe, North America, Latin America with one canonical baseline and regional associations"],
       ["Operations", "Authentication, permissions, configuration, audit logging, reporting, runbooks, and training handover"]
-    ];
-
-    const governanceSteps = [
-      ["Data administrator", "Create or update product data, source mappings, rules, and reusable masters"],
-      ["Engineering reviewer", "Validate technical values, capacity tables, refrigerant logic, and compatibility rules"],
-      ["Product manager", "View and approve only; cannot deploy data directly"],
-      ["Release authority", "Publishes validated snapshots from the canonical database version"]
     ];
 
     const syncRows = [
@@ -972,16 +965,11 @@
         ["masters", "Reusable Data"],
         ["validation", "Validation"]
       ];
-      const governanceNav = [
-        ["governance", "Governance"],
+      const platformNav = [
         ["integrations", "API & Consumers"],
         ["sync", "Sync Management"],
         ["extraction", "LLM Extraction"],
         ["reports", "Scorecards"]
-      ];
-      const utilityNav = [
-        ["operations", "Admin & Handover"],
-        ["importExport", "Import / Export"]
       ];
       return h`
         <div class="shell">
@@ -991,11 +979,7 @@
             ${primaryNav.map(([route, label]) => `<button class="nav-btn ${state.route === route ? "active" : ""}" onclick="setRoute('${route}')">${label}</button>`).join("")}
             <div class="nav-group">
               <div class="nav-group-label">Platform controls</div>
-              <div class="nav-wrap">${governanceNav.map(([route, label]) => `<button class="nav-btn ${state.route === route ? "active" : ""}" onclick="setRoute('${route}')">${label}</button>`).join("")}</div>
-            </div>
-            <div class="nav-group">
-              <div class="nav-group-label">Tools</div>
-              <div class="nav-wrap">${utilityNav.map(([route, label]) => `<button class="nav-btn ${state.route === route ? "active" : ""}" onclick="setRoute('${route}')">${label}</button>`).join("")}</div>
+              <div class="nav-wrap">${platformNav.map(([route, label]) => `<button class="nav-btn ${state.route === route ? "active" : ""}" onclick="setRoute('${route}')">${label}</button>`).join("")}</div>
             </div>
             <div class="nav-title">Product Lines</div>
             ${catalogGroups.map(g => `<button class="nav-btn ${state.productGroup === g.id ? "active" : ""}" onclick="setRoute('editorHome',{productGroup:'${g.id}',deviceType:'${g.modules[0]}'})">${g.name}</button>`).join("")}
@@ -1025,7 +1009,6 @@
         recordEditor: "Record Editor",
         combinations: "Combinations",
         masters: "Reusable Data",
-        governance: "Governance",
         integrations: "API & Consumers",
         sync: "Sync Management",
         extraction: "LLM Extraction",
@@ -1108,7 +1091,7 @@
         <div class="panel" style="margin-top:18px">
           <div class="panel-head"><h2>Modernization coverage</h2><button class="secondary" onclick="setRoute('reports')">Open scorecards</button></div>
           <div class="panel-body">
-            ${coverageItems.map((c, i) => `<div class="reuse-card" onclick="setRoute('${["editorHome","recordEditor","masters","integrations","governance","operations"][i]}')"><div class="reuse-icon">${i + 1}</div><div><h3>${c[0]}</h3><p>${c[1]}</p></div><span class="status ok">Covered</span></div>`).join("")}
+            ${coverageItems.map((c, i) => `<div class="reuse-card" onclick="setRoute('${["editorHome","recordEditor","masters","integrations","reports","validation"][i]}')"><div class="reuse-icon">${i + 1}</div><div><h3>${c[0]}</h3><p>${c[1]}</p></div><span class="status ok">Covered</span></div>`).join("")}
           </div>
         </div>
       `);
@@ -1340,54 +1323,17 @@
       `);
     }
 
-    function governancePage() {
-      return appShell(h`
-        <div class="hero">
-          <h1>Governance & Approval Flow</h1>
-          <p>Data changes move through guided review, product manager sign-off, validation, and release authority approval. Product managers can approve but cannot deploy data directly.</p>
-        </div>
-        <div class="grid two">
-          <div class="panel">
-            <div class="panel-head"><h2>Roles and permissions</h2><button onclick="toast('Role matrix opened')">Manage roles</button></div>
-            <table><thead><tr><th>Role</th><th>Responsibility</th><th>Deploy?</th></tr></thead><tbody>
-              ${governanceSteps.map((r, i) => `<tr><td>${r[0]}</td><td>${r[1]}</td><td><span class="status ${i === 3 ? "ok" : "warn"}">${i === 3 ? "Yes" : "No"}</span></td></tr>`).join("")}
-            </tbody></table>
-          </div>
-          <div class="panel">
-            <div class="panel-head"><h2>Change package P024-126</h2><button class="secondary" onclick="toast('Approval request routed to product manager')">Route approval</button></div>
-            <div class="panel-body">
-              <div class="flow">
-                <div class="flow-step"><b>Enter</b><span>Administrator updates data or rules.</span></div>
-                <div class="flow-step"><b>Review</b><span>Engineering validates technical content.</span></div>
-                <div class="flow-step"><b>Approve</b><span>Product manager signs off.</span></div>
-                <div class="flow-step"><b>Publish</b><span>Release authority creates snapshot.</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      `);
-    }
-
     function integrationsPage() {
       return appShell(h`
         <div class="hero">
           <h1>API & Downstream Consumers</h1>
-          <p>The API layer preserves existing pipeline behavior while exposing governed, documented access for selection tools, energy analysis, BIM/Revit, and approved partners.</p>
+          <p>The API layer preserves existing pipeline behavior while exposing documented access for selection tools, energy analysis, BIM/Revit, and approved partners.</p>
         </div>
         <div class="panel">
-          <div class="panel-head"><h2>Consumer contracts</h2><button onclick="toast('API contract draft exported')">Export contract</button></div>
-          <table><thead><tr><th>Consumer</th><th>Use case</th><th>Coverage</th><th>Status</th></tr></thead><tbody>
-            ${consumers.map(c => `<tr><td>${c.name}</td><td>${c.use}</td><td>${c.coverage}</td><td><span class="status ${c.status === "Mapped" || c.status === "Governed" ? "ok" : "warn"}">${c.status}</span></td></tr>`).join("")}
+          <div class="panel-head"><h2>Consumer API endpoints</h2><button onclick="toast('API contract draft exported')">Export contract</button></div>
+          <table><thead><tr><th>Consumer</th><th>Use case</th><th>Endpoint</th><th>Actions</th></tr></thead><tbody>
+            ${consumers.map(c => `<tr><td>${c.name}</td><td>${c.use}</td><td><code>/api/v1/gsdb/${c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}</code></td><td><button class="secondary" onclick="toast('Showing API for ${c.name}')">Show API</button> <button class="secondary" onclick="toast('Copied API endpoint for ${c.name}')">Copy</button></td></tr>`).join("")}
           </tbody></table>
-        </div>
-        <div class="grid two" style="margin-top:18px">
-          <div class="panel"><div class="panel-head"><h2>Field usage map</h2></div><div class="panel-body">
-            <div class="metric"><b>6,611</b><span>mapped GSDB fields</span></div>
-            <div class="metric" style="margin-top:12px"><b>466</b><span>WebXpress rows need reconciliation</span></div>
-          </div></div>
-          <div class="panel"><div class="panel-head"><h2>Compatibility guardrails</h2></div><div class="panel-body">
-            <div class="reuse-card"><div class="reuse-icon">API</div><div><h3>Backward compatibility validation</h3><p>Contract checks compare current GSDB values, generated fields, and downstream expectations before snapshot publication.</p></div><span class="status ok">Active</span></div>
-          </div></div>
         </div>
       `);
     }
@@ -1496,7 +1442,7 @@
       return appShell(h`
         <div class="hero">
           <h1>Reporting & Data-Quality Scorecards</h1>
-          <p>Operational reporting gives governance teams visibility into release status, completeness, coverage by product line and region, error rates, rework cycles, approvals, and sync conflicts.</p>
+          <p>Operational reporting shows release status, completeness, coverage by product line and region, error rates, rework cycles, approvals, and sync conflicts with drilldowns into the records causing the score.</p>
         </div>
         <div class="metrics">
           <div class="metric"><b>92%</b><span>product completeness</span></div>
@@ -1505,8 +1451,8 @@
           <div class="metric"><b>18%</b><span>rework cycle reduction target</span></div>
         </div>
         <div class="grid two">
-          <div class="panel"><div class="panel-head"><h2>Coverage by product family</h2></div><table><tr><th>Family</th><th>Coverage</th><th>Readiness</th></tr><tr><td>VRV</td><td>96%</td><td><span class="status ok">Ready</span></td></tr><tr><td>Unitary / LC</td><td>88%</td><td><span class="status warn">Review</span></td></tr><tr><td>PTAC / ResPack</td><td>41%</td><td><span class="status warn">Discovery</span></td></tr><tr><td>Altherma</td><td>84%</td><td><span class="status ok">Ready</span></td></tr></table></div>
-          <div class="panel"><div class="panel-head"><h2>Governance scorecard</h2></div><table><tr><th>Measure</th><th>Current</th><th>Target</th></tr><tr><td>Pending approvals</td><td>23</td><td>Less than 10</td></tr><tr><td>Release-ready products</td><td>328</td><td>350</td></tr><tr><td>Field reconciliation queue</td><td>466</td><td>0 before cutover</td></tr><tr><td>Extractor review quality</td><td>91%</td><td>95%</td></tr></table></div>
+          <div class="panel"><div class="panel-head"><h2>Scorecard drilldown</h2><button onclick="toast('Scorecard report exported')">Export</button></div><table><tr><th>Area</th><th>Score</th><th>Open items</th><th>Drilldown</th></tr><tr><td>VRV completeness</td><td>96%</td><td>4 warnings</td><td><button class="secondary" onclick="setRoute('catalog',{productGroup:'vrv',deviceType:'Indoor Units'})">Open records</button></td></tr><tr><td>Unitary / LC readiness</td><td>88%</td><td>9 missing values</td><td><button class="secondary" onclick="setRoute('catalog',{productGroup:'unitary',deviceType:'Outdoor Units'})">Open records</button></td></tr><tr><td>PTAC / ResPack onboarding</td><td>41%</td><td>18 draft fields</td><td><button class="secondary" onclick="setRoute('catalog',{productGroup:'future',deviceType:'PTAC'})">Open records</button></td></tr><tr><td>Sync conflicts</td><td>12</td><td>AHRI / PIM / MDM</td><td><button class="secondary" onclick="setRoute('sync')">Open sync</button></td></tr><tr><td>Extractor review</td><td>91%</td><td>3 low confidence</td><td><button class="secondary" onclick="setRoute('extraction')">Open extraction</button></td></tr></table></div>
+          <div class="panel"><div class="panel-head"><h2>Selected drilldown: Unitary / LC readiness</h2><button class="secondary" onclick="setRoute('validation')">View validation</button></div><table><tr><th>Record</th><th>Issue</th><th>Owner</th><th>Action</th></tr><tr><td>DSH1503D</td><td>Product image thumbnail mapping missing</td><td>Product data</td><td><button class="secondary" onclick="setRoute('recordEditor',{selectedProduct:'DSH1503D'})">Open</button></td></tr><tr><td>DAR09043</td><td>Fan airflow heating values incomplete</td><td>Engineering</td><td><button class="secondary" onclick="setRoute('recordEditor',{selectedProduct:'DAR09043'})">Open</button></td></tr><tr><td>CAPF1824A6</td><td>Selection data review required after copy</td><td>Product data</td><td><button class="secondary" onclick="setRoute('recordEditor',{selectedProduct:'CAPF1824A6'})">Open</button></td></tr><tr><td>DM97MC0804CN</td><td>Performance data ready for sign-off</td><td>Engineering</td><td><button class="secondary" onclick="setRoute('recordEditor',{selectedProduct:'DM97MC0804CN'})">Open</button></td></tr></table></div>
         </div>
       `);
     }
@@ -1585,7 +1531,6 @@
         catalog: catalogPage,
         recordEditor: recordEditorPage,
         masters: mastersPage,
-        governance: governancePage,
         integrations: integrationsPage,
         sync: syncPage,
         extraction: extractionPage,
