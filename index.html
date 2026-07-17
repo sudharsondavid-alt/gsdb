@@ -83,18 +83,15 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-weight: 800;
-      color: var(--daikin);
-      font-size: 30px;
+      width: 214px;
+      height: 54px;
       margin-bottom: 34px;
     }
 
-    .brand-mark {
-      width: 46px;
-      height: 34px;
-      background: linear-gradient(135deg, var(--daikin) 0 42%, transparent 42% 56%, var(--daikin) 56%);
-      clip-path: polygon(0 0, 100% 0, 52% 100%, 0 100%);
+    .brand svg {
+      display: block;
+      width: 100%;
+      height: auto;
     }
 
     .login-card h1 {
@@ -162,7 +159,7 @@
       height: 100vh;
       overflow: auto;
     }
-    .sidebar .brand { color: #fff; font-size: 25px; margin: 4px 8px 22px; }
+    .sidebar .brand { width: 182px; height: 46px; margin: 4px 8px 22px; }
     .nav-title {
       margin: 18px 10px 8px;
       color: #8eb8cf;
@@ -703,6 +700,25 @@
       return products.find(p => p.material === state.selectedProduct) || filteredProducts()[0] || products[0];
     }
 
+    function daikinLogo() {
+      return `
+        <div class="brand" aria-label="Daikin">
+          <svg viewBox="0 0 300 76" role="img" aria-hidden="true" focusable="false">
+            <g fill="#0097d7">
+              <polygon points="0,0 70,0 28,44 0,44"></polygon>
+              <polygon points="0,51 21,51 91,0 70,0"></polygon>
+              <text x="82" y="49"
+                font-family="Arial Black, Arial, Helvetica, sans-serif"
+                font-size="44"
+                font-weight="900"
+                font-style="italic"
+                letter-spacing="1.5">DAIKIN</text>
+            </g>
+          </svg>
+        </div>
+      `;
+    }
+
     function appShell(content) {
       const nav = [
         ["dashboard", "Management Console"],
@@ -717,7 +733,7 @@
       return h`
         <div class="shell">
           <aside class="sidebar">
-            <div class="brand"><span class="brand-mark"></span><span>DAIKIN</span></div>
+            ${daikinLogo()}
             <div class="nav-title">GSDB Modernized</div>
             ${nav.map(([route, label]) => `<button class="nav-btn ${state.route === route ? "active" : ""}" onclick="setRoute('${route}')">${label}</button>`).join("")}
             <div class="nav-title">Product Lines</div>
@@ -757,7 +773,7 @@
       return h`
         <div class="login">
           <section class="login-card">
-            <div class="brand"><span class="brand-mark"></span><span>DAIKIN</span></div>
+            ${daikinLogo()}
             <h1>GSDB modernization prototype</h1>
             <p>One connected workspace for product definitions, shared schemes, combinations, and release validation.</p>
             <div class="field"><label>User</label><input value="rafiul.haq@daikin.example"></div>
