@@ -811,7 +811,7 @@
             <div class="nav-title">GSDB Modernized</div>
             ${primaryNav.map(([route, label]) => `<button class="nav-btn ${state.route === route ? "active" : ""}" onclick="setRoute('${route}')">${label}</button>`).join("")}
             <div class="nav-group">
-              <div class="nav-group-label">RFQ coverage</div>
+              <div class="nav-group-label">Platform controls</div>
               <div class="nav-wrap">${governanceNav.map(([route, label]) => `<button class="nav-btn ${state.route === route ? "active" : ""}" onclick="setRoute('${route}')">${label}</button>`).join("")}</div>
             </div>
             <div class="nav-group">
@@ -927,7 +927,7 @@
           </div>
         </div>
         <div class="panel" style="margin-top:18px">
-          <div class="panel-head"><h2>RFQ component coverage</h2><button class="secondary" onclick="setRoute('reports')">Open scorecards</button></div>
+          <div class="panel-head"><h2>Modernization coverage</h2><button class="secondary" onclick="setRoute('reports')">Open scorecards</button></div>
           <div class="panel-body">
             ${coverageItems.map((c, i) => `<div class="reuse-card" onclick="setRoute('${["editorHome","recordEditor","masters","integrations","governance","operations"][i]}')"><div class="reuse-icon">${i + 1}</div><div><h3>${c[0]}</h3><p>${c[1]}</p></div><span class="status ok">Covered</span></div>`).join("")}
           </div>
